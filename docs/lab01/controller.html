@@ -1,0 +1,133 @@
+---
+layout: blank
+permalink: /lab01/controller/
+---
+
+<h3>Controller</h3>
+
+<p>Last Update: <span id="lastUpdate"></span></p>
+
+<hr>
+
+
+<div class="container">
+    <div class="row">
+        You can use this to control the inputs, wired to Dx and Dy.
+    </div>
+    <div class="row pt-5">
+        <div class="col-6 text-center">
+            <button onclick="countUp()" class="btn btn-lg btn-outline-primary" type="button" name="countUp" id="countUp">Count Up</button>
+        </div>
+        <div class="col-6 text-center">
+            <button onclick="countDown()"  class="btn btn-lg btn-outline-primary" type="button" nname="countDown" id="countDown">Count Down</button>
+        </div>
+    </div>
+    <div class="row pt-5">
+        <p id="log"></p>
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    // Create a client instance
+    var lastUpdateTime = "Null";
+
+
+    const host = "webservices.ceykod.com";
+    const port = 8883;
+    const path = "/mqtt";
+    const clientId = 'client_' + Math.random().toString(36).substring(2, 15);
+    const user = "swarm_user";
+    const pass = "swarm_usere15";
+
+    client = new Paho.MQTT.Client(host, port, path, clientId);
+
+    // set callback handlers
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
+
+    // connect the client
+    client.connect({
+        userName: user,
+        password: pass,
+        // reconnect: false,
+        useSSL: true,
+        keepAliveInterval: 360,
+        cleanSession: false,
+
+        onSuccess: () => {
+            console.log('MQTT: connected');
+            onConnect();
+        },
+        onFailure: () => {
+            console.log('MQTT: connection failed');
+        }
+    });
+
+
+    // called when the client connects
+    function onConnect() {
+        // Once a connection has been made, make a subscription and send a message.
+        console.log("onConnect");
+
+        client.subscribe("co326/lab1/dev/1/btn1/resp/");
+        client.subscribe("co326/lab1/dev/1/btn1/resp/");
+
+        // client.subscribe("World");
+        // message = new Paho.MQTT.Message("Hello");
+        // message.destinationName = "World";
+        // client.send(message);
+    }
+
+    // called when the client loses its connection
+    function onConnectionLost(responseObject) {
+        if (responseObject.errorCode !== 0) {
+            console.log("onConnectionLost:"+responseObject.errorMessage);
+        }
+    }
+
+    // called when a message arrives
+    function onMessageArrived(packet) {
+        const msg = packet.payloadString.trim();
+        const topic = packet.destinationName;
+        console.log(`>> ${topic}: ${msg}`);
+
+        // Update the last know message time
+        lastUpdateTime = new Date().toLocaleString();
+        $('#lastUpdate').html(lastUpdateTime);
+    }
+
+    function publish(topic, message){
+
+    }
+    function countUp(){
+        const message = "1";
+        var payload = new Paho.MQTT.Message(message);
+        payload.destinationName = "co326/lab1/dev/1/btn1/";
+        this.client.send(payload);
+        console.log('MQTT: published', payload.destinationName, message);
+        log("Count up...");
+    }
+    function countDown(){
+        const message = "-1";
+        var payload = new Paho.MQTT.Message(message);
+        payload.destinationName = "co326/lab1/dev/1/btn1/";
+        this.client.send(payload);
+        console.log('MQTT: published', payload.destinationName, message);
+        log("Count down...");
+    }
+
+    function log(msg){
+        $('#log').html(msg);
+
+        setTimeout(function () {
+            $('#log').html("");
+        }, 2500);
+    }
+    $(document).ready(function() {
+        
+
+    });
+</script>

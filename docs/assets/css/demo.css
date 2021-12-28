@@ -1,0 +1,23 @@
+.flex {
+    display: flex;
+    flex-direction: row;
+}
+.gutter.gutter-horizontal {
+    cursor: ew-resize;
+    /* height: 100vh; */
+    background-color: gray;
+    margin: 2px;
+    width: 2px !important;
+}
+
+.split{
+    height: 95vh;
+    padding: 10pt;
+}
+
+iframe {
+    height:calc(100vh - 10px);
+    /*width:calc(100vw - 4px);*/
+    box-sizing: border-box;
+    width: 100%;
+}
