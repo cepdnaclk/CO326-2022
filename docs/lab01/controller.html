@@ -15,15 +15,15 @@ permalink: /lab01/controller/
         You can use this to control the inputs, wired to Dx and Dy.
     </div>
     <div class="row pt-5">
-        <div class="col-6 text-center">
-            <button onclick="countUp()" class="btn btn-lg btn-outline-primary" type="button" name="countUp" id="countUp">Count Up</button>
+        <div class="col-sm-6 text-center pb-3">
+            <button  style="width: 200px;" onclick="countUp()" class="btn btn-lg btn-outline-primary" type="button" name="countUp" id="countUp">Count Up</button>
         </div>
-        <div class="col-6 text-center">
-            <button onclick="countDown()"  class="btn btn-lg btn-outline-primary" type="button" nname="countDown" id="countDown">Count Down</button>
+        <div class="col-sm-6 text-center pb-3">
+            <button  style="width: 200px;" onclick="countDown()"  class="btn btn-lg btn-outline-primary" type="button" nname="countDown" id="countDown">Count Down</button>
         </div>
     </div>
     <div class="row pt-5">
-        <p id="log"></p>
+        <b>INFO:</b><span id="log"></span>
     </div>
 </div>
 
@@ -73,7 +73,7 @@ permalink: /lab01/controller/
         console.log("onConnect");
 
         client.subscribe("co326/lab1/dev/1/btn1/resp/");
-        client.subscribe("co326/lab1/dev/1/btn1/resp/");
+        client.subscribe("co326/lab1/dev/1/btn2/resp/");
 
         // client.subscribe("World");
         // message = new Paho.MQTT.Message("Hello");
@@ -92,7 +92,10 @@ permalink: /lab01/controller/
     function onMessageArrived(packet) {
         const msg = packet.payloadString.trim();
         const topic = packet.destinationName;
+        const button = topic.split('/')[3];
+
         console.log(`>> ${topic}: ${msg}`);
+        log(`btn${button} is ${msg}`);
 
         // Update the last know message time
         lastUpdateTime = new Date().toLocaleString();
@@ -103,20 +106,20 @@ permalink: /lab01/controller/
 
     }
     function countUp(){
-        const message = "1";
+        const message = "2";
         var payload = new Paho.MQTT.Message(message);
-        payload.destinationName = "co326/lab1/dev/1/btn1/";
+        payload.destinationName = "co326/lab1/dev/1/";
         this.client.send(payload);
         console.log('MQTT: published', payload.destinationName, message);
-        log("Count up...");
+        // log("Count up...");
     }
     function countDown(){
-        const message = "-1";
+        const message = "1";
         var payload = new Paho.MQTT.Message(message);
-        payload.destinationName = "co326/lab1/dev/1/btn1/";
+        payload.destinationName = "co326/lab1/dev/1/";
         this.client.send(payload);
         console.log('MQTT: published', payload.destinationName, message);
-        log("Count down...");
+        // log("Count down...");
     }
 
     function log(msg){
@@ -127,7 +130,7 @@ permalink: /lab01/controller/
         }, 2500);
     }
     $(document).ready(function() {
-        
+
 
     });
 </script>

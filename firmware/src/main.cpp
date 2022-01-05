@@ -7,7 +7,7 @@ char tempString1[255];
 const char *ssid = "com-TF-wifi"; // Enter your WiFi name
 const char *password = "netlab12";  // Enter WiFi password
 
-#define MQTT_SUB_MSG "co326/lab1/dev/%d/btn%d"
+#define MQTT_SUB_MSG "co326/lab1/dev/%d/"
 #define MQTT_SUB_RESP "co326/lab1/dev/%d/btn%d/resp/"
 
 #define DEVICE_ID 1
@@ -18,6 +18,9 @@ const char *password = "netlab12";  // Enter WiFi password
 
 uint8_t btnStatus[4];
 uint8_t btn_gpio[4] = {BTN_1, BTN_2, BTN_3, BTN_4};
+
+int received = false;
+char respNum = 0;
 
 // MQTT Broker
 const char *mqtt_broker = "68.183.188.135";
@@ -32,21 +35,20 @@ void callback(char *topic, byte *payload, unsigned int length) {
     Serial.print("Message arrived in topic: ");
     Serial.println(topic);
     Serial.print("Message:");
-    for (unsigned int i = 0; i < length; i++) {
-        Serial.print((char) payload[i]);
-    }
-    Serial.println();
-    Serial.println("-----------------------");
+    // for (unsigned int i = 0; i < length; i++) {
+    //     Serial.print((char) payload[i]);
+    // }
+    respNum = payload[0]- '0';
+    received = true;
+    Serial.printf("Resp: %d\n", respNum);
+
+    // Serial.println();
+    // Serial.println("-----------------------");
 
 }
 
-void changeButton(int btn, int val){
-    digitalWrite(btn_gpio[btn], (val==1) ? HIGH: LOW);
-
-}
-
-void subscribe(uint8_t btn){
-    sprintf(tempString1, MQTT_SUB_MSG, DEVICE_ID, btn);
+void subscribe(){
+    sprintf(tempString1, MQTT_SUB_MSG, DEVICE_ID);
     Serial.printf("Subscribing to %s\n", tempString1);
     client.subscribe(tempString1);
 }
@@ -57,8 +59,13 @@ void publish(uint8_t btn, int val){
     sprintf(tempString1, MQTT_SUB_RESP, DEVICE_ID, btn);
     sprintf(payload, "%d", val);
 
-    Serial.printf("Publishing to %s\n", tempString1);
+    Serial.printf("Publishing to %s > %s\n", tempString1, payload);
     client.publish(tempString1, payload);
+}
+
+void changeButton(int btn, int val){
+    digitalWrite(btn_gpio[btn], (val==1) ? HIGH: LOW);
+    publish(btn, val);
 }
 
 
@@ -88,10 +95,7 @@ void setup() {
         }
     }
     // publish and subscribe
-    subscribe(1);
-    subscribe(2);
-    subscribe(3);
-    subscribe(4);
+    subscribe();
 
     // Setup GPIO
     pinMode(BTN_1, OUTPUT);
@@ -111,12 +115,14 @@ int counter = 0;
 void loop() {
     client.loop();
 
-    publish(1, counter++);
-    delay(1000);
-    publish(2, counter++);
-    delay(1000);
-    publish(3, counter++);
-    delay(1000);
-    publish(4, counter++);
-    delay(1000);
+    if(received == true){
+        Serial.println("Received+");
+        received = false;
+
+        changeButton(respNum, 1);
+        delay(1000);
+        changeButton(respNum, 0);
+    }
+
+    delay(500);
 }

@@ -9,28 +9,65 @@ permalink: /lab01/instructions/
 
 In this lab, you are going to try parallel port communication, where a parallel port is used as the interface to communicate with a seven-segment display. Due to the prevailing conditions in the country, you are going to do this lab as a remote lab. Modify the codes you have implemented in the pre-lab according to the given circuit at the lab.
 
+<div class="container">
+<img src="{{ '/assets/img/parallel_port.gif' | relative_url }}" class="img img-thumb mr-auto" />
+</div>
+
 <h3>Lab Exercises</h3>
 
 <b><u>Task 01: Display 0-9 numbers on a single 7 segment display</u></b>
 
-The circuit is created using a common anode seven segment display. Seven segment display is connected to the parallel port pins as shown in the below figure 02.
+Implement a timer counter, to count from 0 to 9.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/io.h>
+#include <time.h>
+
+#define DATA_PORT 0x378         // Parallel port base addr
+#define STATUS_PORT DATA_PORT+1
+#define CONTROL_PORT DATA_PORT+2
+
+unsigned char data;
+
+int main() {
+
+    if (ioperm(DATA_PORT,1,1)){
+
+        fprintf(stderr, "Access denied to %x\n", DATA_PORT);
+        exit(1);
+    }
+
+    // outb(data, DATA_PORT);
+    // sleep();
+}
+```
+
+Compile Instructions:
+
+```bash
+gcc -o ./ex1 ./ex1.c
+sudo ./ex1 
+```
 
 
-Note that a separate resistor is connected in series to each segment of the seven-segment display.
-
-Connect to the lab computer using the remote connection and modify the program written in the pre-lab to light up each segment of SSD one by one in the above circuit.
-
-
-
-<b><u>Task 02: Display 0-9 numbers on a single 7 segment display using 74LS47 IC
+<b><u>Task 02:
 </u></b>
 
+Implement the previous algorithm as counter.
 
-Connect to the lab computer using the remote connection and modify the program written in the pre-lab to display characters from 0-9 in an infinite loop with a delay of 1 second between each character using the 74S47 IC.
+- Count Up will increase the value shown in the 7 segment display.
+- Count Down will decrease the value shown in the 7 segment display.
+
+You can use the buttons in the right side of this window to give the input signals into the parallel port
+
+Count Up signal is wired to XXX port and Count Up is wired to YYY port.
 
 
-<b><u>Task 03: Change the numbers displayed in the SSD with a push button</u></b>
 
-Modify the code written in the pre-lab, and use it to change the numbers displayed in the SSD when the push button is pressed. A pull up Resistor is connected with the circuit as shown in Figure 04.
 
-NOTE : Pull-up resistors are used to define the state of an otherwise "floating" input by pulling the voltage at the pin to a set voltage.
+### Note
+
+Please make sure to delete your lab codes from the remote machine after complete your lab experiment.
