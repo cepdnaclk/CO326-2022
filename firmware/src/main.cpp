@@ -11,14 +11,13 @@ const char *password = "netlab12";  // Enter WiFi password
 #define MQTT_SUB_RESP "co326/lab1/dev/%d/btn%d/resp/"
 
 #define DEVICE_ID 1
-#define BTN_1 1
-#define BTN_2 2
-// #define BTN_IND_1 3
-// #define BTN_IND_2 4
+#define BTN_1 D1
+#define BTN_2 D2
+#define BTN_3 D3
+#define BTN_4 D4
 
-const char *topic = "co326/lab1/dev/1/";
-uint8_t btnStatus[2];
-
+uint8_t btnStatus[4];
+uint8_t btn_gpio[4] = {BTN_1, BTN_2, BTN_3, BTN_4};
 
 // MQTT Broker
 const char *mqtt_broker = "68.183.188.135";
@@ -39,28 +38,11 @@ void callback(char *topic, byte *payload, unsigned int length) {
     Serial.println();
     Serial.println("-----------------------");
 
-    // For now, will not consider the topic, only the payload will be considered
-    // No matter what received, just toggle the button status
-
-    // Format: %d %d (button, status)
-
-    // TODO: Add to Q  and process later
-    // uint8_t button, val;
-    // uint8_t count = sscanf(payload, "%u %u", (unsigned int*)&button, (unsigned int*)&val);
-
-    // if(count == 2){
-    //     Serial.printf("Reading: Button: %d, Value: %d\n\n", button, val);
-    // }else{
-    //     Serial.printf("Error in reading the input\n\n");
-    // }
-
 }
 
 void changeButton(int btn, int val){
-    if (btn==1){
-        digitalWrite(BTN_1, (val==1) ? HIGH: LOW);
-        // digitalWrite(BTN_IND_1, (val==1) ? HIGH: LOW);
-    }
+    digitalWrite(btn_gpio[btn], (val==1) ? HIGH: LOW);
+
 }
 
 void subscribe(uint8_t btn){
@@ -108,16 +90,19 @@ void setup() {
     // publish and subscribe
     subscribe(1);
     subscribe(2);
+    subscribe(3);
+    subscribe(4);
 
     // Setup GPIO
     pinMode(BTN_1, OUTPUT);
     pinMode(BTN_2, OUTPUT);
+    pinMode(BTN_3, OUTPUT);
+    pinMode(BTN_4, OUTPUT);
+
     changeButton(0,0);
     changeButton(1,0);
-    
-    // pinMode(BTN_IND_1, OUTPUT);
-    // pinMode(BTN_IND_2, OUTPUT);
-
+    changeButton(2,0);
+    changeButton(3,0);
 }
 
 
@@ -127,6 +112,11 @@ void loop() {
     client.loop();
 
     publish(1, counter++);
+    delay(1000);
     publish(2, counter++);
+    delay(1000);
+    publish(3, counter++);
+    delay(1000);
+    publish(4, counter++);
     delay(1000);
 }
