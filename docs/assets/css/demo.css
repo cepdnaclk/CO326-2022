@@ -5,9 +5,9 @@
 .gutter.gutter-horizontal {
     cursor: ew-resize;
     /* height: 100vh; */
-    background-color: gray;
-    margin: 2px;
-    width: 2px !important;
+    background-color: #9f9f9f;
+    margin: 1px;
+    width: 1px !important;
 }
 
 .split{
@@ -16,8 +16,12 @@
 }
 
 iframe {
-    height:calc(100vh - 10px);
+    height:calc(100vh - 20px);
     /*width:calc(100vw - 4px);*/
     box-sizing: border-box;
     width: 100%;
+}
+
+h1,h2,h3,u{
+    padding-top: 15px;
 }

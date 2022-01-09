@@ -11,10 +11,10 @@ const char *password = "netlab12";  // Enter WiFi password
 #define MQTT_SUB_RESP "co326/lab1/dev/%d/btn%d/resp/"
 
 #define DEVICE_ID 1
-#define BTN_1 D1
-#define BTN_2 D2
-#define BTN_3 D3
-#define BTN_4 D4
+#define BTN_1 D0
+#define BTN_2 D1
+#define BTN_3 D5
+#define BTN_4 D6
 
 uint8_t btnStatus[4];
 uint8_t btn_gpio[4] = {BTN_1, BTN_2, BTN_3, BTN_4};
@@ -116,12 +116,12 @@ void loop() {
     client.loop();
 
     if(received == true){
-        Serial.println("Received+");
+    Serial.println("Received+");
         received = false;
 
-        changeButton(respNum, 1);
-        delay(1000);
-        changeButton(respNum, 0);
+        changeButton(respNum-1, 1);
+        delay(2500);
+        changeButton(respNum-1, 0);
     }
 
     delay(500);

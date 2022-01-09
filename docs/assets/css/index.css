@@ -5,6 +5,9 @@
     min-height: 75vh!important;
 }
 
+h1,h2,h3,u{
+    padding-top: 15px !important;
+}
 
 footer {
   padding: 2.5rem 0;

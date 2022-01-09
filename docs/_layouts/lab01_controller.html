@@ -1,6 +1,5 @@
 ---
 layout: blank
-permalink: /lab01/controller/
 ---
 
 <h3>Controller</h3>
@@ -12,18 +11,28 @@ permalink: /lab01/controller/
 
 <div class="container">
     <div class="row">
-        You can use this to control the inputs, wired to Dx and Dy.
+        You can use this two buttons to control the inputs to the parallel port.
+        <br><br>
+        D{{ page.button_up }} and D{{ page.button_down }} pins of the ESP8266 Microcontroller in the lab setup will send a Logic HIGH signal for 2.5 seconds to the parallel port's S7 and S6 pins once you pressed the relevent buttons in here.
     </div>
     <div class="row pt-5">
-        <div class="col-sm-6 text-center pb-3">
-            <button  style="width: 200px;" onclick="countUp()" class="btn btn-lg btn-outline-primary" type="button" name="countUp" id="countUp">Count Up</button>
+        <div class="col-sm-6 text-center pb-2">
+            <button  style="width: 200px;" onclick="countUp()" class="btn btn-lg btn-outline-primary" type="button" name="countUp" id="countUp">Count Up (S7)</button>
         </div>
-        <div class="col-sm-6 text-center pb-3">
-            <button  style="width: 200px;" onclick="countDown()"  class="btn btn-lg btn-outline-primary" type="button" nname="countDown" id="countDown">Count Down</button>
+        <div class="col-sm-6 text-center pb-2">
+            <button  style="width: 200px;" onclick="countDown()"  class="btn btn-lg btn-outline-primary" type="button" nname="countDown" id="countDown">Count Down (S6)</button>
         </div>
     </div>
+    <div class="row pt-2">
+        <b>INFO:</b><span id="log">&nbsp;</span>
+    </div>
+</div>
+<hr>
+<div class="container">
     <div class="row pt-5">
-        <b>INFO:</b><span id="log"></span>
+        From the remote machine, you can start a Zoom call, and turn on the camera of the machine itself. Then you can receive the visual updates of the 7 segment display and the Push Button signals.
+        <br><br>
+        Green LED shows the signals coming to S6, and Red LED shows the signals coming to S7 pin. Due to network communication delays, there can be some response delay on the visual outputs.
     </div>
 </div>
 
@@ -66,14 +75,13 @@ permalink: /lab01/controller/
         }
     });
 
-
     // called when the client connects
     function onConnect() {
         // Once a connection has been made, make a subscription and send a message.
         console.log("onConnect");
 
-        client.subscribe("co326/lab1/dev/1/btn1/resp/");
-        client.subscribe("co326/lab1/dev/1/btn2/resp/");
+        client.subscribe("co326/lab1/dev/{{ page.device }}/btn1/resp/");
+        client.subscribe("co326/lab1/dev/{{ page.device }}/btn2/resp/");
 
         // client.subscribe("World");
         // message = new Paho.MQTT.Message("Hello");
@@ -106,17 +114,17 @@ permalink: /lab01/controller/
 
     }
     function countUp(){
-        const message = "2";
+        const message = '{{ page.button_up }}';
         var payload = new Paho.MQTT.Message(message);
-        payload.destinationName = "co326/lab1/dev/1/";
+        payload.destinationName = "co326/lab1/dev/{{ page.device }}/";
         this.client.send(payload);
         console.log('MQTT: published', payload.destinationName, message);
         // log("Count up...");
     }
     function countDown(){
-        const message = "1";
+        const message = '{{ page.button_down }}';
         var payload = new Paho.MQTT.Message(message);
-        payload.destinationName = "co326/lab1/dev/1/";
+        payload.destinationName = "co326/lab1/dev/{{ page.device }}/";
         this.client.send(payload);
         console.log('MQTT: published', payload.destinationName, message);
         // log("Count down...");
@@ -126,9 +134,10 @@ permalink: /lab01/controller/
         $('#log').html(msg);
 
         setTimeout(function () {
-            $('#log').html("");
+            $('#log').html("&nbsp;");
         }, 2500);
     }
+
     $(document).ready(function() {
 
 

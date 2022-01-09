@@ -9,13 +9,15 @@ permalink: /lab01/instructions/
 
 In this lab, you are going to try parallel port communication, where a parallel port is used as the interface to communicate with a seven-segment display. Due to the prevailing conditions in the country, you are going to do this lab as a remote lab. Modify the codes you have implemented in the pre-lab according to the given circuit at the lab.
 
+The detailed lab sheet can be downloaded from the *Course Page*.
+
 <div class="container">
 <img src="{{ '/assets/img/parallel_port.gif' | relative_url }}" class="img img-thumb mr-auto" />
 </div>
 
 <h3>Lab Exercises</h3>
 
-<b><u>Task 01: Display 0-9 numbers on a single 7 segment display</u></b>
+<b><u>Task 01 (Exercise 1): Display 0-9 numbers on a single 7 segment display</u></b>
 
 Implement a timer counter, to count from 0 to 9.
 
@@ -49,21 +51,21 @@ Compile Instructions:
 
 ```bash
 gcc -o ./ex1 ./ex1.c
-sudo ./ex1 
+sudo ./ex1
 ```
 
 
-<b><u>Task 02:
+<b><u>Task 02 (Exercise 2):
 </u></b>
 
-Implement the previous algorithm as counter.
+Improve the previous implementation as counter.
+- Can count numbers from 0 to 9.
+- Count Up should increase the value shown in the 7 segment display by 1.
+- Count Down should decrease the value shown in the 7 segment display by 1.
 
-- Count Up will increase the value shown in the 7 segment display.
-- Count Down will decrease the value shown in the 7 segment display.
+You can use the buttons in the right side of this window to give the input signals into the parallel port.
 
-You can use the buttons in the right side of this window to give the input signals into the parallel port
-
-Count Up signal is wired to XXX port and Count Up is wired to YYY port.
+Count Up signal is wired to S7 port and Count Down is wired to S6 port.
 
 
 
