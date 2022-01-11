@@ -4,15 +4,15 @@
 char tempString1[255];
 
 // WiFi
-const char *ssid = "Techyon Lab"; // Enter your WiFi name
-const char *password = "iot@ceykod";  // Enter WiFi password
-// const char *ssid = "com-TF-wifi"; // Enter your WiFi name
-// const char *password = "netlab12";  // Enter WiFi password
+// const char *ssid = "Techyon Lab"; // Enter your WiFi name
+// const char *password = "iot@ceykod";  // Enter WiFi password
+const char *ssid = "com-TF-wifi"; // Enter your WiFi name
+const char *password = "netlab12";  // Enter WiFi password
 
 #define MQTT_SUB_MSG "co326/lab1/dev/%d/"
 #define MQTT_SUB_RESP "co326/lab1/dev/%d/%d/resp/"
 
-#define DEVICE_ID 1
+#define DEVICE_ID 2
 #define BTN_1 D0
 #define BTN_2 D1
 #define BTN_3 D5
