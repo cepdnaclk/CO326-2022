@@ -55,8 +55,7 @@ sudo ./ex1
 ```
 
 
-<b><u>Task 02 (Exercise 2):
-</u></b>
+<b><u>Task 02 (Exercise 2): Implement an up/down counter</u></b>
 
 Improve the previous implementation as counter.
 - Can count numbers from 0 to 9.
@@ -67,9 +66,10 @@ You can use the buttons in the right side of this window to give the input signa
 
 Count Up signal is wired to S7 port and Count Down is wired to S6 port.
 
-
-
+<div class="container">
+<img src="{{ '/assets/img/lab1_circuit.jpg' | relative_url }}" class="img img-thumb mr-auto" />
+</div>
 
 ### Note
 
-Please make sure to delete your lab codes from the remote machine after complete your lab experiment.
+Please make sure to delete your lab codes from the remote machine before log out from the *Team Viewer* session

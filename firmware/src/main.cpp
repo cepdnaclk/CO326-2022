@@ -4,11 +4,13 @@
 char tempString1[255];
 
 // WiFi
-const char *ssid = "com-TF-wifi"; // Enter your WiFi name
-const char *password = "netlab12";  // Enter WiFi password
+const char *ssid = "Techyon Lab"; // Enter your WiFi name
+const char *password = "iot@ceykod";  // Enter WiFi password
+// const char *ssid = "com-TF-wifi"; // Enter your WiFi name
+// const char *password = "netlab12";  // Enter WiFi password
 
 #define MQTT_SUB_MSG "co326/lab1/dev/%d/"
-#define MQTT_SUB_RESP "co326/lab1/dev/%d/btn%d/resp/"
+#define MQTT_SUB_RESP "co326/lab1/dev/%d/%d/resp/"
 
 #define DEVICE_ID 1
 #define BTN_1 D0
@@ -17,7 +19,7 @@ const char *password = "netlab12";  // Enter WiFi password
 #define BTN_4 D6
 
 uint8_t btnStatus[4];
-uint8_t btn_gpio[4] = {BTN_1, BTN_2, BTN_3, BTN_4};
+uint8_t btn_gpio[8] = {D0, D1, D2, D3, D4, D5, D6, D7};
 
 int received = false;
 char respNum = 0;
@@ -67,7 +69,6 @@ void changeButton(int btn, int val){
     digitalWrite(btn_gpio[btn], (val==1) ? HIGH: LOW);
     publish(btn, val);
 }
-
 
 void setup() {
     // Set software serial baud to 115200;
@@ -119,9 +120,9 @@ void loop() {
     Serial.println("Received+");
         received = false;
 
-        changeButton(respNum-1, 1);
+        changeButton(respNum, 1);
         delay(2500);
-        changeButton(respNum-1, 0);
+        changeButton(respNum, 0);
     }
 
     delay(500);
