@@ -64,7 +64,7 @@ Improve the previous implementation as counter.
 
 You can use the buttons in the right side of this window to give the input signals into the parallel port.
 
-Count Up signal is wired to S7 port and Count Down is wired to S6 port.
+Count Up signal is wired to S6 pin and Count Down is wired to S7 pin.
 
 <div class="container">
 <img src="{{ '/assets/img/lab1_circuit.jpg' | relative_url }}" class="img img-thumb mr-auto" />
