@@ -4,10 +4,8 @@ layout: blank
 
 <h3>Controller</h3>
 
-<p>Last Update: <span id="lastUpdate"></span></p>
-
+<p>Last Update: <span id="lastUpdate"><span style="color:red">Disconnected</span></span></p>
 <hr>
-
 
 <div class="container">
     <div class="row">
@@ -86,7 +84,7 @@ layout: blank
 
         client.subscribe("co326/lab1/dev/{{ page.device }}/{{ page.button_up }}/resp/");
         client.subscribe("co326/lab1/dev/{{ page.device }}/{{ page.button_down }}/resp/");
-
+        $('#lastUpdate').html("");
         // client.subscribe("World");
         // message = new Paho.MQTT.Message("Hello");
         // message.destinationName = "World";

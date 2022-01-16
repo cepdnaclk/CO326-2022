@@ -4,10 +4,10 @@
 char tempString1[255];
 
 // WiFi
-// const char *ssid = "Techyon Lab"; // Enter your WiFi name
-// const char *password = "iot@ceykod";  // Enter WiFi password
-const char *ssid = "com-TF-wifi"; // Enter your WiFi name
-const char *password = "netlab12";  // Enter WiFi password
+const char *ssid = "Techyon Lab"; // Enter your WiFi name
+const char *password = "iot@ceykod";  // Enter WiFi password
+// const char *ssid = "com-TF-wifi"; // Enter your WiFi name
+// const char *password = "netlab12";  // Enter WiFi password
 
 #define MQTT_SUB_MSG "co326/lab1/dev/%d/"
 #define MQTT_SUB_RESP "co326/lab1/dev/%d/%d/resp/"
@@ -79,6 +79,9 @@ void setup() {
         delay(500);
         Serial.println("Connecting to WiFi..");
     }
+    WiFi.setAutoReconnect(true);
+    WiFi.persistent(true);
+
     Serial.println("Connected to the WiFi network");
     //connecting to a mqtt broker
     client.setServer(mqtt_broker, mqtt_port);
@@ -110,20 +113,62 @@ void setup() {
     changeButton(3,0);
 }
 
+unsigned long previousMillis = 0;
+unsigned long interval = 30000;
+
+void printWiFiStatus(){
+    //print the Wi-Fi status every 30 seconds
+    unsigned long currentMillis = millis();
+    if (currentMillis - previousMillis >=interval){
+        switch (WiFi.status()){
+            case WL_NO_SSID_AVAIL:
+            Serial.println("Configured SSID cannot be reached");
+            break;
+            case WL_CONNECTED:
+            Serial.println("Connection successfully established");
+            break;
+            case WL_CONNECT_FAILED:
+            Serial.println("Connection failed");
+            break;
+        }
+        Serial.printf("Connection status: %d\n", WiFi.status());
+        Serial.print("RRSI: ");
+        Serial.println(WiFi.RSSI());
+        previousMillis = currentMillis;
+        Serial.println("");
+
+        // Just dump some message into MQTT
+        client.publish("co326/void", "***");
+    }
+}
 
 int counter = 0;
+int retryCount = 0;
 
 void loop() {
     client.loop();
 
     if(received == true){
-    Serial.println("Received+");
+        Serial.println("Received+");
         received = false;
 
         changeButton(respNum, 1);
         delay(2500);
         changeButton(respNum, 0);
     }
+
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.println("[Retry] Connecting to WiFi...");
+        retryCount++;
+
+        if(retryCount > 10){
+            ESP.restart();
+        }
+    }
+
+    retryCount = 0;
+    printWiFiStatus();
 
     delay(500);
 }

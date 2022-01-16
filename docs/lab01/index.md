@@ -13,6 +13,7 @@ Please select your Lab Machine setup from below according the Lab Group assignme
 - [Lab Machine el-03](./group3){:target="blank"}
 - [Lab Machine el-04](./group4){:target="blank"}
 
+**Note**: If the *Last Update* field in the right side panel shows as <span style="color:red">Disconnected</span>, you need to wait until someone manually reset the ESP8266 board in the lab machine. Please contact one of the course instructors on a working day to resolve the issue.
 
 Detailed instructions on how to use *Team Viewer* can be find on the below URL
 - [Access Lab Computers Remotely](https://docs.google.com/document/d/e/2PACX-1vRqx9QfEJsR1jkDBMYmB3EdEUzRYGwjvWlRhww-JsFmK0pZGiPiFfpEf5T5Xo0yLgLmkeL-_ZhQMK5D/pub){:target="blank"}
