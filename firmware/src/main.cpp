@@ -1,18 +1,26 @@
+/*
+
+https://arduino.esp8266.com/stable/package_esp8266com_index.json
+
+ls -l /dev/ttyUSB*
+sudo usermod -a -G dialout el-01
+sudo chmod ug+rwx /dev/ttyUSB0
+
+*/
+
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
 char tempString1[255];
 
 // WiFi
-const char *ssid = "Techyon Lab"; // Enter your WiFi name
-const char *password = "iot@ceykod";  // Enter WiFi password
-// const char *ssid = "com-TF-wifi"; // Enter your WiFi name
-// const char *password = "netlab12";  // Enter WiFi password
+const char *ssid = "com-TF-wifi"; // Enter your WiFi name
+const char *password = "netlab12";  // Enter WiFi password
 
 #define MQTT_SUB_MSG "co326/lab1/dev/%d/"
 #define MQTT_SUB_RESP "co326/lab1/dev/%d/%d/resp/"
 
-#define DEVICE_ID 2
+#define DEVICE_ID 3
 #define BTN_1 D0
 #define BTN_2 D1
 #define BTN_3 D5
@@ -72,12 +80,19 @@ void changeButton(int btn, int val){
 
 void setup() {
     // Set software serial baud to 115200;
+
     Serial.begin(115200);
     // connecting to a WiFi network
     WiFi.begin(ssid, password);
+
+
+    int setupRetry = 0;
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
         Serial.println("Connecting to WiFi..");
+        setupRetry++;
+
+        if(setupRetry>10) ESP.reset();
     }
     WiFi.setAutoReconnect(true);
     WiFi.persistent(true);
