@@ -84,11 +84,7 @@ layout: blank
 
         client.subscribe("co326/lab1/dev/{{ page.device }}/{{ page.button_up }}/resp/");
         client.subscribe("co326/lab1/dev/{{ page.device }}/{{ page.button_down }}/resp/");
-        $('#lastUpdate').html("");
-        // client.subscribe("World");
-        // message = new Paho.MQTT.Message("Hello");
-        // message.destinationName = "World";
-        // client.send(message);
+        $('#lastUpdate').html('<span style="color:blue">Waiting...</span>');
     }
 
     // called when the client loses its connection
