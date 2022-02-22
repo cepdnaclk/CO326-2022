@@ -9,8 +9,12 @@ layout: blank
 
 <div class="container">
     <div class="row">
-        <p>You can use this slider to control the input voltage to the pin XX of the DAQ card in the lab setup.</p>
-        <br><br>
+        <p>You can use this slider to control the input status of the <b>pin 52 (P0.0)</b> of the DAQ card in the lab setup. You can see the status from the Blue LED through the camera.</p>
+        <br>
+        <p>The <b>pin 17 (P0.1)</b> will be connected to a Red color LED.</p>
+        <br>
+        <p>The <b>pin 60 (AI5)</b> will be connected to a LDR.</p>
+        <br>
         <p></p>
     </div>
     <div class="row pt-3">
@@ -33,9 +37,9 @@ layout: blank
     <div class="row pt-5">
         <p>From the remote machine, you can turn on the camera of the machine through this <a href="https://webrtc.github.io/samples/src/content/getusermedia/gum/" target="_blank">web page</a>. Then you can receive the visual updates of the lab setup.</p>
         <br>
-        <p>The microcontroller is using PWM to generate a analog voltage. So the value you read from the DAQ card may be different from the value displayed in here.</p>
-        <br>
         <p>Due to network communication delays, there can be some response delay on the visual outputs.</p>
+        <br>
+        <p>If the slider didn't worked in the browser window in the lab machine (sometimes it happens due to university network issues), please visit this link from your machine.</p>
     </div>
 </div>
 
@@ -82,6 +86,8 @@ layout: blank
         var pwm = Math.round((value/3.3)*1024);
         var payload = new Paho.MQTT.Message(`${pwm}`);
         payload.destinationName = "co326/lab3/dev/{{ page.device }}/pot/";
+        payload.retained = true;
+
         this.client.send(payload);
         console.log('MQTT: published', payload.destinationName, pwm);
         log("Digital value will be sent to the DAQ card...");
@@ -113,6 +119,11 @@ layout: blank
 
         console.log(`>> ${topic}: ${msg}`);
         log(`Value is now updated`);
+
+        if(topic == "co326/lab3/dev/{{ page.device }}/pot/resp/"){
+            $("#range1").val(msg);
+            $('#lblPotValue').html(msg);
+        }
 
         // Update the last know message time
         lastUpdateTime = new Date().toLocaleString();
