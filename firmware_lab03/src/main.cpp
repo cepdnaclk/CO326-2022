@@ -23,7 +23,7 @@ const char *password = "netlab12";  // Enter WiFi password
 #define MQTT_SUB_MSG "co326/lab3/dev/%d/pot/"
 #define MQTT_SUB_RESP "co326/lab3/dev/%d/pot/resp/"
 
-#define DEVICE_ID 1
+#define DEVICE_ID 2
 
 int received = false;
 int respNum = 0;
@@ -162,8 +162,14 @@ void setup() {
     subscribe();
 
     // Setup GPIO
-    ledcSetup(ledChannel, freq, resolution);
-    ledcAttachPin(potPin, ledChannel);
+    // ledcSetup(ledChannel, freq, resolution);
+    // ledcAttachPin(potPin, ledChannel);
+
+    // sigmaDeltaSetup(18,0, 312500);
+    // //initialize channel 0 to off
+    // sigmaDeltaWrite(0, 0);
+
+    pinMode(18, OUTPUT);
 
 }
 
@@ -201,7 +207,10 @@ void loop() {
     client.loop();
 
     if(received == true){
-        ledcWrite(ledChannel, respNum);
+        // ledcWrite(ledChannel, respNum);
+        // sigmaDeltaWrite(0, respNum);
+        digitalWrite(18, (respNum>0) ? HIGH: LOW);
+
         received = false;
         delay(1000);
         publish(respNum);
