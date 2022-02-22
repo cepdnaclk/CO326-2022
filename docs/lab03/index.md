@@ -22,7 +22,5 @@ Detailed instructions on how to use *Team Viewer* can be find on the below URL
 **If you are currently signed into 'eYYXXX@eng.pdn.ac.lk' email, you can see the Lab Machine details below**.
 
 - Please use the *IP Address* here to remotely connect into the lab machine via *Team Viewer*, using the password, *'Team Viewer Password'*.
-- You can use the *'Machine Password'* to obtain the access to the parallel port using the sudo command.
-
 
 <iframe style="box-sizing: border-box; width: 100%; height: 250px" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ91YLm8fRd3kHIEMOmUTBi41BuT46Q15V19zM1d83mbz_KObYi6eXxa--eaMeK50xbC3QFv84Z_tBA/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"></iframe>

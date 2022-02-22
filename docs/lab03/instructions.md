@@ -27,6 +27,7 @@ The video should be submitted as a **zip file**, named as *"CO326_lab03_GroupXX.
 
 Hint: You can use a screen recording software like *[Screen Recorder Pro](https://www.microsoft.com/en-us/p/screen-recorder-pro-for-win10/9n27gq6mls5s)* to record the demonstration.
 
+Once you completed the lab, please make sure to update the Google Sheet, [CO326 Lab03 Completion](https://docs.google.com/spreadsheets/d/1YOwtUlmdOONxOYvDJwIcPrCFjXHm1ofozjH0hQ4CAas/edit?usp=sharing)
 ### Note
 
 Please make sure to delete your lab codes from the remote machine before logging out from the *Team Viewer* session.
