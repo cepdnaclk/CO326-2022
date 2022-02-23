@@ -6,10 +6,13 @@ title: "CO326 - Lab03: DAQ"
 
 ## CO326 - Lab03: Data Acquisition (DAQ)
 
-Please select your Lab Machine setup from below according the Lab Group assignment and continue the lab experiments.
+Please select your Lab Machine setup from below according the Lab Group assignment and continue the lab experiments. Read all the instructions carefully before starting the practical. 
 
 - [Lab Machine el-01](./group1){:target="blank"}
+{% comment %}
 - [Lab Machine el-02](./group2){:target="blank"}
+{% endcomment %}
+- Lab Machine el-02 (will be available soon)
 
 **Note**:
 - If the *"Last Update"* field in the right side panel shows as "<span style="color:red">Disconnected</span>" you need to wait until someone manually reset the ESP32 board in the lab machine. Please contact one of the course instructors on a working day to resolve the issue.

@@ -9,11 +9,11 @@ layout: blank
 
 <div class="container">
     <div class="row">
-        <p>You can use this slider to control the input status of the <b>pin 52 (P0.0)</b> of the DAQ card in the lab setup. You can see the status from the Blue LED through the camera.</p>
+        <p>You can use following slider to control the input status of the <b>pin 52 (P0.0)</b> of the DAQ card in the lab setup. You can see the status from the Blue LED through the camera.</p>
         <br>
-        <p>The <b>pin 17 (P0.1)</b> will be connected to a Red color LED.</p>
+        <p>The <b>pin 17 (P0.1)</b> is connected to a Red color LED.</p>
         <br>
-        <p>The <b>pin 60 (AI5)</b> will be connected to a LDR.</p>
+        <p>The <b>pin 60 (AI5)</b> is connected to a LDR.</p>
         <br>
         <p></p>
     </div>
@@ -39,7 +39,7 @@ layout: blank
         <br>
         <p>Due to network communication delays, there can be some response delay on the visual outputs.</p>
         <br>
-        <p>If the slider didn't worked in the browser window in the lab machine (sometimes it happens due to university network issues), please visit this link from your machine.</p>
+        <p>If the slider didn't worked in the browser window in the lab machine (sometimes it happens due to university network issues), please visit this page from your own machine. If even the microcontroller didn't responded to the inputs, it seems to be a connectivity issue. In such a situation, please contact an instructor.</p>
     </div>
 </div>
 
@@ -56,6 +56,7 @@ layout: blank
     const clientId = 'client_' + Math.random().toString(36).substring(2, 15);
     const user = "swarm_user";
     const pass = "swarm_usere15";
+    let msgCount = 0;
 
     client = new Paho.MQTT.Client(host, port, path, clientId);
 
@@ -126,8 +127,11 @@ layout: blank
         }
 
         // Update the last know message time
-        lastUpdateTime = new Date().toLocaleString();
-        $('#lastUpdate').html(lastUpdateTime);
+        if(msgCount > 0){
+            lastUpdateTime = new Date().toLocaleString();
+            $('#lastUpdate').html(lastUpdateTime);
+        }
+        msgCount++;
     }
 
     // function countUp(){
