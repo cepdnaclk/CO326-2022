@@ -113,12 +113,14 @@ void callback(char *topic, byte *payload, unsigned int length) {
 // Publish the ACK message
 void publish(int val){
     char payload [10];
+    boolean retained = true;
 
     sprintf(tempString1, MQTT_SUB_RESP, DEVICE_ID);
     sprintf(payload, "%d", val);
 
     Serial.printf("Publishing to %s > %s\n", tempString1, payload);
-    client.publish(tempString1, payload);
+
+    client.publish(tempString1, payload, retained);
 }
 
 void setup() {
