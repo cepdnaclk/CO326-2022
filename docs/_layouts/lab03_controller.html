@@ -84,7 +84,7 @@ layout: blank
     function potentiometerChange(value){
         // alert(value);
         $('#lblPotValue').html(value);
-        var pwm = Math.round((value/3.3)*1024);
+        var pwm = value;//Math.round((value/3.3)*1024);
         var payload = new Paho.MQTT.Message(`${pwm}`);
         payload.destinationName = "co326/lab3/dev/{{ page.device }}/pot/";
         payload.retained = true;
@@ -116,7 +116,7 @@ layout: blank
     // called when a message arrives
     function onMessageArrived(packet) {
         const topic = packet.destinationName;
-        const msg = packet.payloadString.trim();
+        const msg = ((packet.payloadString.trim()) > 0) ? 1: 0;
 
         console.log(`>> ${topic}: ${msg}`);
         log(`Value is now updated`);
