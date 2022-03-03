@@ -11,6 +11,17 @@
 #define PWM_FREQ 5000
 #define PWM_RES 12
 
+//PID constants
+double kp = 10;
+double ki = 0.01;
+double kd = 0;
+
+unsigned long currentTime, previousTime;
+double elapsedTime;
+double lastError;
+double cumError, rateError;
+int setPoint = 0;
+
 void setup() {
     // Set software serial baud to 115200;
 
@@ -20,32 +31,52 @@ void setup() {
     pinMode(PIN_B, OUTPUT);
     pinMode(PIN_EN, OUTPUT);
 
-    // configure LED PWM functionalitites
+    // Configure LED PWM functionalitites
     ledcSetup(PWM_CHANNEL, PWM_FREQ, PWM_RES);
 
-    // attach the channel to the GPIO to be controlled
+    // Attach the channel to the GPIO to be controlled
     ledcAttachPin(PIN_EN, PWM_CHANNEL);
     ledcWrite(PWM_CHANNEL, 0);
 
-
+    // Setup Digital Ports
     digitalWrite(PIN_A, HIGH);
     digitalWrite(PIN_B, LOW);
+
+    setPoint = 0;
+}
+
+int computePID(int error){
+    currentTime = millis();
+    elapsedTime = (int)(currentTime - previousTime);
+
+    cumError += error * elapsedTime;
+    rateError = (error - lastError)/elapsedTime;
+
+    int out = (int)(kp*error + ki*cumError + kd*rateError);
+
+    lastError = error;
+    previousTime = currentTime;
+
+    return max(-4095, min(out, 4095));
 }
 
 void loop() {
 
     int potValue = analogRead(PIN_POT) - 2047;
-    Serial.printf("Reading: %d\n", potValue);
+    int error = (setPoint - potValue)/4;
+    int pid = computePID(error);
+    int motorSpeed = abs(pid);
+    Serial.printf("Reading: %d, SetPoint: %d, Error: %d, Motor: %d (%f %f %f)\n", potValue, setPoint, error, motorSpeed, kp*error, ki*cumError, kd*rateError);
 
     if(potValue > 0){
         digitalWrite(PIN_A, HIGH);
         digitalWrite(PIN_B, LOW);
-        ledcWrite(PWM_CHANNEL, 2*potValue);
     }else{
         digitalWrite(PIN_A, LOW);
         digitalWrite(PIN_B, HIGH);
-        ledcWrite(PWM_CHANNEL, -2*potValue);
     }
+
+    ledcWrite(PWM_CHANNEL, motorSpeed );
 
     delay(50);
 }
