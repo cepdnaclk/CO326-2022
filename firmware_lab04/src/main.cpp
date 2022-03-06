@@ -12,9 +12,9 @@
 #define PWM_RES 12
 
 //PID constants
-double kp = 10;
+double kp = 12;
 double ki = 0.01;
-double kd = 0;
+double kd = 0.01;
 
 unsigned long currentTime, previousTime;
 double elapsedTime;
@@ -63,7 +63,7 @@ int computePID(int error){
 void loop() {
 
     int potValue = analogRead(PIN_POT) - 2047;
-    int error = (setPoint - potValue)/4;
+    int error = -1*(setPoint - potValue)/4;
     int pid = computePID(error);
     int motorSpeed = abs(pid);
     Serial.printf("Reading: %d, SetPoint: %d, Error: %d, Motor: %d (%f %f %f)\n", potValue, setPoint, error, motorSpeed, kp*error, ki*cumError, kd*rateError);

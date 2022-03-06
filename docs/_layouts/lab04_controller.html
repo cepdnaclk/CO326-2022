@@ -1,0 +1,171 @@
+---
+layout: blank
+---
+
+<h3>Controller</h3>
+
+<p>Last Update: <span id="lastUpdate"><span style="color:red">Disconnected</span></span></p>
+<hr>
+
+<div class="container">
+    <div class="row">
+        <p></p>
+    </div>
+    <div class="row pt-3">
+        <div class="container">
+            <div class="col-12">
+                <label for="rangeTarget" class="form-label">
+                    Target Value:
+                    <b><span id="lblTarget">0</span></b>
+                </label>
+                <input type="range" class="form-range" id="rangeTarget" min="-90" max="90" step="1" onchange="targetChange(this.value)" value="0">
+            </div>
+        </div>
+    </div>
+    <div class="row pt-2">
+        <b>INFO:</b><span id="log">&nbsp;</span>
+    </div>
+</div>
+<hr>
+<div class="container">
+    <div class="row pt-5">
+        <p>From the remote machine, you can turn on the camera of the machine through this <a href="https://webrtc.github.io/samples/src/content/getusermedia/gum/" target="_blank">web page</a>. Then you can receive the visual updates of the lab setup.</p>
+        <br>
+        <p>Due to network communication delays, there can be some response delay on the visual outputs.</p>
+        <br>
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    // Create a client instance
+    var lastUpdateTime = "Null";
+
+    const host = "webservices.ceykod.com";
+    const port = 8883;
+    const path = "/mqtt";
+    const clientId = 'client_' + Math.random().toString(36).substring(2, 15);
+    const user = "swarm_user";
+    const pass = "swarm_usere15";
+    let msgCount = 0;
+
+    client = new Paho.MQTT.Client(host, port, path, clientId);
+
+    // set callback handlers
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
+
+    // connect the client
+    client.connect({
+        userName: user,
+        password: pass,
+        // reconnect: true,
+        useSSL: true,
+        keepAliveInterval: 120,
+        cleanSession: false,
+        onSuccess: () => {
+            console.log('MQTT: connected');
+            onConnect();
+        },
+        onFailure: () => {
+            console.log('MQTT: connection failed');
+        }
+    });
+
+    function targetChange(value){
+        // alert(value);
+        $('#lblTarget').html(value);
+        // var pwm = value;//Math.round((value/3.3)*1024);
+        // var payload = new Paho.MQTT.Message(`${pwm}`);
+        // payload.destinationName = "co326/lab4/dev/{{ page.device }}/pot/";
+        // payload.retained = true;
+        //
+        // this.client.send(payload);
+        // console.log('MQTT: published', payload.destinationName, pwm);
+        // log("Digital value will be sent to the DAQ card...");
+    }
+
+    function pidChange(){
+        // alert(value);
+        // $('#lblTarget').html(value);
+        // var pwm = value;//Math.round((value/3.3)*1024);
+        // var payload = new Paho.MQTT.Message(`${pwm}`);
+        // payload.destinationName = "co326/lab4/dev/{{ page.device }}/pot/";
+        // payload.retained = true;
+        //
+        // this.client.send(payload);
+        // console.log('MQTT: published', payload.destinationName, pwm);
+        // log("Digital value will be sent to the DAQ card...");
+    }
+
+    // called when the client connects
+    function onConnect() {
+        // Once a connection has been made, make a subscription and send a message.
+        console.log("onConnect");
+
+        const topic = "co326/lab4/dev/{{ page.device }}/resp/target/";
+        client.subscribe(topic);
+        console.log("Subscribed to", topic);
+
+        const topic2 = "co326/lab4/dev/{{ page.device }}/resp/pid/";
+        client.subscribe(topic2);
+        console.log("Subscribed to", topic2);
+
+        $('#lastUpdate').html('<span style="color:blue">Waiting...</span>');
+    }
+
+    // called when the client loses its connection
+    function onConnectionLost(responseObject) {
+        if (responseObject.errorCode !== 0) {
+            console.log("onConnectionLost:"+responseObject.errorMessage);
+        }
+    }
+
+    // called when a message arrives
+    function onMessageArrived(packet) {
+        const topic = packet.destinationName;
+        const msg = ((packet.payloadString.trim()) > 0) ? 1: 0;
+
+        console.log(`>> ${topic}: ${msg}`);
+        log(`Value is now updated`);
+
+        if(topic == "co326/lab4/dev/{{ page.device }}/pid/"){
+            // $("#range1").val(msg);
+            // $('#lblTarget').html(msg);
+        } else if(topic == "co326/lab4/dev/{{ page.device }}/target/"){
+            // $("#range1").val(msg);
+            // $('#lblTarget').html(msg);
+        }
+
+        // Update the last know message time
+        if(msgCount > 0){
+            lastUpdateTime = new Date().toLocaleString();
+            $('#lastUpdate').html(lastUpdateTime);
+        }
+        msgCount++;
+    }
+
+    // function countUp(){
+    //     const message = '{{ page.button_up }}';
+    //     var payload = new Paho.MQTT.Message(message);
+    //     payload.destinationName = "co326/lab1/dev/{{ page.device }}/";
+    //     this.client.send(payload);
+    //     console.log('MQTT: published', payload.destinationName, message);
+    //     // log("Count up...");
+    // }
+
+    function log(msg){
+        $('#log').html(msg);
+
+        setTimeout(function () {
+            $('#log').html("&nbsp;");
+        }, 1500);
+    }
+
+    $(document).ready(function() {
+
+
+    });
+</script>
