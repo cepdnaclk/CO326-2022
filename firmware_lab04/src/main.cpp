@@ -12,8 +12,8 @@
 #define PWM_RES 12
 
 //PID constants
-double kp = 12;
-double ki = 0.01;
+double kp = 10;
+double ki = 0.05;
 double kd = 0.01;
 
 unsigned long currentTime, previousTime;
@@ -21,10 +21,9 @@ double elapsedTime;
 double lastError;
 double cumError, rateError;
 int setPoint = 0;
+int correction = -160;
 
 void setup() {
-    // Set software serial baud to 115200;
-
     Serial.begin(115200);
 
     pinMode(PIN_A, OUTPUT);
@@ -62,13 +61,13 @@ int computePID(int error){
 
 void loop() {
 
-    int potValue = analogRead(PIN_POT) - 2047;
+    int potValue = analogRead(PIN_POT) - 2047 - correction;
     int error = -1*(setPoint - potValue)/4;
     int pid = computePID(error);
     int motorSpeed = abs(pid);
-    Serial.printf("Reading: %d, SetPoint: %d, Error: %d, Motor: %d (%f %f %f)\n", potValue, setPoint, error, motorSpeed, kp*error, ki*cumError, kd*rateError);
+    Serial.printf("R: %d, SP: %d, E: %d, Out: %d (p=%f i=%f d=%f)\n", potValue, setPoint, error, motorSpeed, kp*error, ki*cumError, kd*rateError);
 
-    if(potValue > 0){
+    if(pid > 0){
         digitalWrite(PIN_A, HIGH);
         digitalWrite(PIN_B, LOW);
     }else{
